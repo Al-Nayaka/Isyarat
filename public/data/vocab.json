@@ -1,0 +1,164 @@
+[
+  {
+    "id": "damai",
+    "teks_tampil": "Damai",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari Indonesian Sign Language (BISINDO) Word Dataset (Kaggle, Mulkan Fajri, CC BY 4.0)."
+  },
+  {
+    "id": "mendengar",
+    "teks_tampil": "Mendengar",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari Indonesian Sign Language (BISINDO) Word Dataset (Kaggle, Mulkan Fajri, CC BY 4.0)."
+  },
+  {
+    "id": "ragu",
+    "teks_tampil": "Ragu",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari Indonesian Sign Language (BISINDO) Word Dataset (Kaggle, Mulkan Fajri, CC BY 4.0)."
+  },
+  {
+    "id": "semoga_beruntung",
+    "teks_tampil": "Semoga Beruntung",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari Indonesian Sign Language (BISINDO) Word Dataset (Kaggle, Mulkan Fajri, CC BY 4.0)."
+  },
+  {
+    "id": "tersenyum",
+    "teks_tampil": "Tersenyum",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari Indonesian Sign Language (BISINDO) Word Dataset (Kaggle, Mulkan Fajri, CC BY 4.0)."
+  },
+  {
+    "id": "cari",
+    "teks_tampil": "Cari",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari WL-BISINDO (Kaggle, Kindy dkk., CC BY-NC 4.0; varian Banten)."
+  },
+  {
+    "id": "hari",
+    "teks_tampil": "Hari",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari WL-BISINDO (Kaggle, Kindy dkk., CC BY-NC 4.0; varian Banten)."
+  },
+  {
+    "id": "lagi",
+    "teks_tampil": "Lagi",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari WL-BISINDO (Kaggle, Kindy dkk., CC BY-NC 4.0; varian Banten)."
+  },
+  {
+    "id": "maaf",
+    "teks_tampil": "Maaf",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari WL-BISINDO (Kaggle, Kindy dkk., CC BY-NC 4.0; varian Banten)."
+  },
+  {
+    "id": "makan",
+    "teks_tampil": "Makan",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari WL-BISINDO (Kaggle, Kindy dkk., CC BY-NC 4.0; varian Banten)."
+  },
+  {
+    "id": "saya",
+    "teks_tampil": "Saya",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari WL-BISINDO (Kaggle, Kindy dkk., CC BY-NC 4.0; varian Banten)."
+  },
+  {
+    "id": "terima_kasih",
+    "teks_tampil": "Terima Kasih",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari WL-BISINDO (Kaggle, Kindy dkk., CC BY-NC 4.0; varian Banten)."
+  },
+  {
+    "id": "tuli",
+    "teks_tampil": "Tuli",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari WL-BISINDO (Kaggle, Kindy dkk., CC BY-NC 4.0; varian Banten)."
+  },
+  {
+    "id": "siapa",
+    "teks_tampil": "Siapa",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari WL-BISINDO (Kaggle, Kindy dkk., CC BY-NC 4.0; varian Banten)."
+  },
+  {
+    "id": "kapan",
+    "teks_tampil": "Kapan",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari WL-BISINDO (Kaggle, Kindy dkk., CC BY-NC 4.0; varian Banten)."
+  },
+  {
+    "id": "mengapa",
+    "teks_tampil": "Mengapa",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari WL-BISINDO (Kaggle, Kindy dkk., CC BY-NC 4.0; varian Banten)."
+  },
+  {
+    "id": "kuning",
+    "teks_tampil": "Kuning",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari WL-BISINDO (Kaggle, Kindy dkk., CC BY-NC 4.0; varian Banten)."
+  },
+  {
+    "id": "hijau",
+    "teks_tampil": "Hijau",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari WL-BISINDO (Kaggle, Kindy dkk., CC BY-NC 4.0; varian Banten)."
+  },
+  {
+    "id": "hitam",
+    "teks_tampil": "Hitam",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari WL-BISINDO (Kaggle, Kindy dkk., CC BY-NC 4.0; varian Banten)."
+  },
+  {
+    "id": "dengar",
+    "teks_tampil": "Dengar",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari WL-BISINDO (Kaggle, Kindy dkk., CC BY-NC 4.0; varian Banten)."
+  },
+  {
+    "id": "berangkat",
+    "teks_tampil": "Berangkat",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari WL-BISINDO (Kaggle, Kindy dkk., CC BY-NC 4.0; varian Banten)."
+  },
+  {
+    "id": "teman",
+    "teks_tampil": "Teman",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari WL-BISINDO (Kaggle, Kindy dkk., CC BY-NC 4.0; varian Banten)."
+  },
+  {
+    "id": "rumah",
+    "teks_tampil": "Rumah",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari WL-BISINDO (Kaggle, Kindy dkk., CC BY-NC 4.0; varian Banten)."
+  },
+  {
+    "id": "pagi",
+    "teks_tampil": "Pagi",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari WL-BISINDO (Kaggle, Kindy dkk., CC BY-NC 4.0; varian Banten)."
+  },
+  {
+    "id": "siang",
+    "teks_tampil": "Siang",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari WL-BISINDO (Kaggle, Kindy dkk., CC BY-NC 4.0; varian Banten)."
+  },
+  {
+    "id": "sore",
+    "teks_tampil": "Sore",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari WL-BISINDO (Kaggle, Kindy dkk., CC BY-NC 4.0; varian Banten)."
+  },
+  {
+    "id": "malam",
+    "teks_tampil": "Malam",
+    "audio_file": null,
+    "catatan_isyarat": "Berasal dari WL-BISINDO (Kaggle, Kindy dkk., CC BY-NC 4.0; varian Banten)."
+  }
+]
