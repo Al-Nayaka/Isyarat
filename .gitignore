@@ -1,0 +1,21 @@
+# Dependency & cache
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Hasil build/paket
+release/
+
+# Sistem operasi & editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Rahasia & log
+.env
+.env.*
+*.log
