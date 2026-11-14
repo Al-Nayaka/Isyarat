@@ -1,0 +1,17 @@
+ISYARAT — FRONTEND A, PERBAIKAN KAMERA HP
+=========================================
+
+1. Klik kanan ZIP -> Extract All.
+2. VS Code -> File -> Open Folder -> pilih folder yang menampilkan package.json.
+3. Terminal -> New Terminal -> ketik: npm start
+4. Di laptop buka http://localhost:5500 (atau port yang ditulis terminal).
+5. Di HP via Wi-Fi: URL IP laptop hanya untuk CEK TAMPILAN, BUKAN KAMERA.
+6. Jika ingin kamera HP sungguhan: BACA PANDUAN-KAMERA-HP.md
+   Sambungkan HP USB data + Chrome Port forwarding, lalu buka
+   http://localhost:5500 DI CHROME HP.
+7. Mode contoh/simulasi UI: http://localhost:5500/?mock=1
+
+NOTE: kamera sudah memakai getUserMedia, tetapi model pengenalan AI sungguhan
+belum ada sampai anggota B & C menggabungkan kodenya.
+
+Setelah diuji, lihat CHECKLIST-SETELAH-INSTALL.md.

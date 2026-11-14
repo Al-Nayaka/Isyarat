@@ -1,0 +1,19 @@
+{
+  "name": "isyarat-frontend-a",
+  "private": true,
+  "version": "1.1.0",
+  "type": "module",
+  "description": "Isyarat: frontend responsif, engine MediaPipe lokal, perekam dataset, dan PWA offline",
+  "scripts": {
+    "start": "node server.mjs",
+    "test:syntax": "node --check public/js/ui/app.js && node --check public/js/ui/camera.js && node --check public/js/ui/engine-bridge.js && node --check public/js/ui/storage.js && node --check public/js/ui/speech.js && node --check public/js/engine/config.js && node --check public/js/engine/errors.js && node --check public/js/engine/normalize.js && node --check public/js/engine/smoother.js && node --check public/js/engine/hand-detector.js && node --check public/js/engine/index.js && node --check public/js/ml/classifier.js && node --check public/js/recorder/recorder.js && node --check public/sw.js && node --check ml/scripts/train-knn.mjs",
+    "test:engine": "node docs/test-engine.mjs",
+    "test:ml": "node docs/test-ml.mjs",
+    "ml:validate": "node ml/scripts/train-knn.mjs --dry-run",
+    "ml:train": "node ml/scripts/train-knn.mjs --augment-mirror",
+    "ml:guides": "node ml/scripts/make-guides.mjs",
+    "deploy:check": "node scripts/deploy-check.mjs",
+    "package:release": "powershell -ExecutionPolicy Bypass -File scripts/package-release.ps1",
+    "test:ui": "node docs/check-ui.mjs"
+  }
+}

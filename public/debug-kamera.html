@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>Diagnostik Kamera — Isyarat</title>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, sans-serif; background: #08272b; color: #f7f8f6; }
+    main { max-width: 980px; margin: 0 auto; padding: 20px; }
+    h1 { font-size: 1.35rem; margin: 0 0 4px; }
+    p.lead { margin: 0 0 16px; color: #b9d3d0; font-size: .92rem; }
+    .stage { position: relative; background: #04191c; border: 1px solid #1d474c; border-radius: 14px; overflow: hidden; aspect-ratio: 4 / 3; display: grid; place-items: center; }
+    video, canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+    canvas { pointer-events: none; }
+    .empty { color: #86a7a4; padding: 24px; text-align: center; }
+    .bar { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
+    button { font: inherit; font-weight: 600; padding: 10px 16px; border-radius: 10px; border: 0; background: #ffc83d; color: #142528; cursor: pointer; }
+    button.secondary { background: #12383d; color: #f7f8f6; border: 1px solid #2b5b60; }
+    .control { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 10px; background: #12383d; border: 1px solid #2b5b60; font-size: .9rem; font-weight: 600; }
+    .control select, .control input { font: inherit; padding: 4px 6px; border-radius: 6px; border: 1px solid #2b5b60; background: #08272b; color: #f7f8f6; }
+    .control input { width: 64px; }
+    .file-label { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 10px; border: 1px solid #2b5b60; background: #12383d; cursor: pointer; font-weight: 600; font-size: .9rem; }
+    .file-label input { max-width: 180px; }
+    table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #1d474c; }
+    th { color: #b9d3d0; font-weight: 600; width: 42%; }
+    .ok { color: #7ee2a8; }
+    .bad { color: #ff9b8a; }
+    .warn { color: #ffd37a; }
+    #error { margin-top: 12px; padding: 10px 12px; border-radius: 10px; background: #3a1414; color: #ffb4a8; display: none; white-space: pre-wrap; }
+    code { background: #12383d; padding: 2px 6px; border-radius: 5px; }
+    ol { line-height: 1.7; color: #d8e7e5; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Diagnostik kamera &amp; MediaPipe</h1>
+  <p class="lead">Halaman ini menguji kamera dan deteksi tangan mentah, tanpa KNN. Tidak ada data yang dikirim ke internet.</p>
+
+  <div class="stage" id="stage">
+    <div class="empty" id="empty">Kamera belum aktif. Tekan “Mulai kamera”.</div>
+    <video id="video" autoplay playsinline muted></video>
+    <canvas id="overlay"></canvas>
+  </div>
+
+  <div class="bar">
+    <button type="button" id="start">Mulai kamera</button>
+    <button type="button" id="stop" class="secondary">Hentikan</button>
+    <label class="control">Delegate
+      <select id="delegateSelect">
+        <option value="cpu">CPU (disarankan)</option>
+        <option value="gpu">GPU</option>
+      </select>
+    </label>
+    <label class="control">MediaPipe
+      <select id="bundleSelect">
+        <option value="current">1.2.3</option>
+        <option value="legacy">0.10.35 (legacy)</option>
+      </select>
+    </label>
+    <label class="control">Min confidence
+      <input id="minInput" type="number" min="0.1" max="0.9" step="0.1" value="0.5">
+    </label>
+  </div>
+
+  <div class="bar">
+    <button type="button" id="testFrame" class="secondary">Uji 1 frame video (IMAGE mode)</button>
+    <label class="secondary file-label">
+      Uji gambar dari file <input type="file" id="fileInput" accept="image/*">
+    </label>
+  </div>
+
+  <table>
+    <tbody>
+      <tr><th>Status kamera</th><td id="camStatus">belum aktif</td></tr>
+      <tr><th>Resolusi video</th><td id="resolution">-</td></tr>
+      <tr><th><code>video.currentTime</code> bergerak</th><td id="clock">-</td></tr>
+      <tr><th>Delegate MediaPipe</th><td id="delegate">-</td></tr>
+      <tr><th>Field hasil MediaPipe</th><td id="resultFields">-</td></tr>
+      <tr><th>Tangan terdeteksi</th><td id="hands">-</td></tr>
+      <tr><th>Landmark tangan pertama</th><td id="landmarks">-</td></tr>
+      <tr><th>Rata-rata FPS deteksi</th><td id="fps">-</td></tr>
+      <tr><th>Kecerahan frame kamera</th><td id="luma">-</td></tr>
+      <tr><th>Kecerahan gambar uji</th><td id="imageLuma">-</td></tr>
+      <tr><th>Hasil uji IMAGE mode</th><td id="imageTest">-</td></tr>
+      <tr><th>Error terakhir</th><td id="lastError">-</td></tr>
+    </tbody>
+  </table>
+
+  <div id="error"></div>
+
+  <h2 style="font-size:1.05rem;margin-top:22px">Cara membaca hasil</h2>
+  <ol>
+    <li><strong>Tangan terdeteksi = 0</strong> padahal tangan jelas di kamera: masalah MediaPipe/pencahayaan/posisi.</li>
+    <li><strong>currentTime tidak bergerak</strong>: video berhenti (autoplay diblokir) — klik video, lalu muat ulang.</li>
+    <li><strong>Tangan terdeteksi ≥ 1</strong> tetapi aplikasi bilang “Tangan belum terlihat”: masalah ada di alur engine aplikasi, bukan kamera.</li>
+    <li>Pastikan <strong>kedua tangan</strong> masuk frame dan berjarak ±40–80 cm dari kamera.</li>
+    <li>Jika GPU bermasalah, buka <code>/debug-kamera.html?delegate=cpu</code> atau <code>/?delegate=cpu</code> untuk memaksa CPU.</li>
+    <li>Jika tetap 0, coba sensitivitas lebih rendah: <code>/debug-kamera.html?delegate=cpu&amp;min=0.3</code>.</li>
+    <li>Jika masih 0, coba MediaPipe legacy: <code>/debug-kamera.html?delegate=cpu&amp;bundle=legacy</code>.</li>
+  </ol>
+
+  <p class="lead">Kembali ke <a href="/" style="color:#ffc83d">aplikasi</a>.</p>
+</main>
+
+<script type="module">
+const video = document.getElementById('video');
+const canvas = document.getElementById('overlay');
+const ctx = canvas.getContext('2d');
+const empty = document.getElementById('empty');
+const startBtn = document.getElementById('start');
+const stopBtn = document.getElementById('stop');
+const els = {
+  camStatus: document.getElementById('camStatus'),
+  resolution: document.getElementById('resolution'),
+  clock: document.getElementById('clock'),
+  delegate: document.getElementById('delegate'),
+  hands: document.getElementById('hands'),
+  resultFields: document.getElementById('resultFields'),
+  landmarks: document.getElementById('landmarks'),
+  fps: document.getElementById('fps'),
+  luma: document.getElementById('luma'),
+  imageLuma: document.getElementById('imageLuma'),
+  imageTest: document.getElementById('imageTest'),
+  lastError: document.getElementById('lastError'),
+  error: document.getElementById('error')
+};
+const testFrameBtn = document.getElementById('testFrame');
+const fileInput = document.getElementById('fileInput');
+const delegateSelect = document.getElementById('delegateSelect');
+const minInput = document.getElementById('minInput');
+const bundleSelect = document.getElementById('bundleSelect');
+
+// Default CPU; URL ?delegate=cpu|gpu, ?bundle=legacy, dan ?min=0.3 tetap didukung.
+const query = new URLSearchParams(location.search);
+if (query.get('delegate') === 'gpu' || query.get('delegate') === 'cpu') {
+  delegateSelect.value = query.get('delegate');
+}
+if (query.get('bundle') === 'legacy') bundleSelect.value = 'legacy';
+if (query.get('min')) minInput.value = query.get('min');
+
+let stream = null;
+let landmarker = null;
+let imageLandmarker = null;
+let workingDelegate = null;
+let running = false;
+let lastTime = -1;
+let lastVideoTime = -1;
+let lastDraw = 0;
+let lastLumaCheck = 0;
+let frameCount = 0;
+let fpsWindowStart = 0;
+let rafId = 0;
+
+function setError(message) {
+  els.error.style.display = message ? 'block' : 'none';
+  els.error.textContent = message || '';
+  els.lastError.textContent = message ? message.split('\n')[0] : '-';
+  els.lastError.className = message ? 'bad' : '';
+}
+
+/** Rata-rata kecerahan 0..255. Nilai ~0 berarti frame hitam. */
+function luminanceOf(source, width, height) {
+  const sample = document.createElement('canvas');
+  sample.width = 64;
+  sample.height = 48;
+  const context = sample.getContext('2d', { willReadFrequently: true });
+  context.drawImage(source, 0, 0, width, height, 0, 0, sample.width, sample.height);
+  const { data } = context.getImageData(0, 0, sample.width, sample.height);
+  let total = 0;
+  for (let index = 0; index < data.length; index += 4) {
+    total += 0.2126 * data[index] + 0.7152 * data[index + 1] + 0.0722 * data[index + 2];
+  }
+  return total / (data.length / 4);
+}
+
+function draw(handLandmarks) {
+  const width = canvas.width;
+  const height = canvas.height;
+  ctx.clearRect(0, 0, width, height);
+  ctx.lineWidth = Math.max(2, width / 320);
+  for (const landmarks of handLandmarks) {
+    ctx.strokeStyle = '#ffc83d';
+    ctx.fillStyle = '#7ee2a8';
+    const points = landmarks.map(point => ({ x: (1 - point.x) * width, y: point.y * height }));
+    for (const point of points) {
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, Math.max(2.5, width / 240), 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // Garis sederhana antar landmark berurutan (bukan skema tulang resmi).
+    ctx.beginPath();
+    for (let i = 0; i < points.length; i++) {
+      if (i === 0) ctx.moveTo(points[i].x, points[i].y);
+      else ctx.lineTo(points[i].x, points[i].y);
+    }
+    ctx.stroke();
+  }
+}
+
+async function createLandmarker(runningMode = 'VIDEO') {
+  const basePath = bundleSelect.value === 'legacy' ? '/vendor/mediapipe-legacy' : '/vendor/mediapipe';
+  const vision = await import(`${basePath}/vision_bundle.mjs`);
+  const { FilesetResolver, HandLandmarker } = vision;
+  const fileset = await FilesetResolver.forVisionTasks(`${basePath}/wasm`);
+  const requested = delegateSelect.value;
+  const minValue = Number(minInput.value);
+  const minConfidence = Number.isFinite(minValue) && minValue > 0 && minValue <= 1 ? minValue : 0.5;
+  const base = requested === 'gpu' ? ['GPU', 'CPU'] : ['CPU'];
+  const delegates = workingDelegate ? [workingDelegate, ...base.filter(value => value !== workingDelegate)] : base;
+  const errors = [];
+  for (const delegate of delegates) {
+    try {
+      const instance = await HandLandmarker.createFromOptions(fileset, {
+        baseOptions: { modelAssetPath: '/models/hand_landmarker.task', delegate },
+        runningMode,
+        numHands: 2,
+        minHandDetectionConfidence: minConfidence,
+        minHandPresenceConfidence: minConfidence,
+        minTrackingConfidence: minConfidence
+      });
+      workingDelegate = delegate;
+      els.delegate.textContent = `${delegate} / ${runningMode} / min ${minConfidence} / ${bundleSelect.value}`;
+      els.delegate.className = 'ok';
+      return instance;
+    } catch (error) {
+      errors.push(`${delegate}: ${error?.message || error}`);
+    }
+  }
+  throw new Error(errors.join('\n'));
+}
+
+async function ensureImageLandmarker() {
+  if (!imageLandmarker) imageLandmarker = await createLandmarker('IMAGE');
+  return imageLandmarker;
+}
+
+async function detectStill(source, label) {
+  els.imageTest.textContent = `${label}: memproses…`;
+  els.imageTest.className = '';
+  try {
+    const detector = await ensureImageLandmarker();
+    const result = detector.detect(source);
+    const hands = result?.landmarks || result?.handLandmarks || [];
+    els.resultFields.textContent = Object.keys(result || {}).join(', ') || '(kosong)';
+    els.imageTest.textContent = `${label}: ${hands.length} tangan${hands.length ? ` (${hands[0].length} titik)` : ''}`;
+    els.imageTest.className = hands.length ? 'ok' : 'bad';
+    draw(hands);
+  } catch (error) {
+    els.imageTest.textContent = `${label}: gagal — ${error?.message || error}`;
+    els.imageTest.className = 'bad';
+  }
+}
+
+testFrameBtn.addEventListener('click', async () => {
+  if (!video.videoWidth) {
+    els.imageTest.textContent = 'Nyalakan kamera dulu.';
+    els.imageTest.className = 'warn';
+    return;
+  }
+  const snapshot = document.createElement('canvas');
+  snapshot.width = video.videoWidth;
+  snapshot.height = video.videoHeight;
+  snapshot.getContext('2d').drawImage(video, 0, 0);
+  await detectStill(snapshot, 'Frame kamera');
+});
+
+fileInput.addEventListener('change', () => {
+  const file = fileInput.files?.[0];
+  if (!file) return;
+  const image = new Image();
+  image.onload = async () => {
+    try {
+      const luma = luminanceOf(image, image.naturalWidth, image.naturalHeight);
+      els.imageLuma.textContent = `${luma.toFixed(1)} / 255 (${image.naturalWidth}×${image.naturalHeight})`;
+      els.imageLuma.className = luma < 5 ? 'bad' : 'ok';
+    } catch (error) {
+      els.imageLuma.textContent = `gagal: ${error?.message || error}`;
+      els.imageLuma.className = 'bad';
+    }
+    // Kirim elemen <img> langsung; ini jalur resmi MediaPipe, tanpa canvas perantara.
+    await detectStill(image, `File ${file.name}`);
+    URL.revokeObjectURL(image.src);
+  };
+  image.onerror = () => {
+    els.imageTest.textContent = 'Gambar gagal dibuka.';
+    els.imageTest.className = 'bad';
+  };
+  image.src = URL.createObjectURL(file);
+});
+
+async function startCamera() {
+  setError('');
+  empty.style.display = 'none';
+  els.camStatus.textContent = 'meminta izin…';
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      audio: false,
+      video: { facingMode: { ideal: 'user' }, width: { ideal: 640 }, height: { ideal: 480 }, frameRate: { ideal: 24, max: 30 } }
+    });
+    video.srcObject = stream;
+    await video.play();
+    els.camStatus.textContent = 'aktif';
+    els.camStatus.className = 'ok';
+    els.resolution.textContent = `${video.videoWidth} × ${video.videoHeight}`;
+    canvas.width = video.videoWidth || 640;
+    canvas.height = video.videoHeight || 480;
+  } catch (error) {
+    els.camStatus.textContent = 'gagal';
+    els.camStatus.className = 'bad';
+    empty.style.display = 'block';
+    empty.textContent = `Kamera gagal: ${error?.name || error}. Gunakan localhost/HTTPS dan izinkan kamera.`;
+    setError(`${error?.name || 'Error'}: ${error?.message || error}`);
+    return;
+  }
+
+  try {
+    els.delegate.textContent = 'memuat…';
+    landmarker = await createLandmarker('VIDEO');
+  } catch (error) {
+    setError(`MediaPipe gagal dimuat:\n${error?.message || error}`);
+    return;
+  }
+
+  running = true;
+  frameCount = 0;
+  fpsWindowStart = performance.now();
+  lastVideoTime = -1;
+  loop();
+}
+
+function loop() {
+  if (!running) return;
+  rafId = requestAnimationFrame(loop);
+
+  const now = performance.now();
+  if (document.hidden) return;
+  // Deteksi maksimal ~15 fps agar tidak membebani CPU.
+  if (now - lastDraw < 66) return;
+  lastDraw = now;
+
+  if (!video.videoWidth || video.readyState < 2) return;
+
+  const videoTime = video.currentTime;
+  if (videoTime !== lastVideoTime) {
+    els.clock.textContent = 'ya';
+    els.clock.className = 'ok';
+  } else if (videoTime > 0) {
+    els.clock.textContent = 'tidak (video berhenti)';
+    els.clock.className = 'warn';
+  }
+  lastVideoTime = videoTime;
+
+  let timestamp = now;
+  if (timestamp <= lastTime) timestamp = lastTime + 1;
+  lastTime = timestamp;
+
+  try {
+    const result = landmarker.detectForVideo(video, timestamp);
+    const hands = result?.landmarks || result?.handLandmarks || [];
+    els.resultFields.textContent = Object.keys(result || {}).join(', ') || '(kosong)';
+    els.hands.textContent = String(hands.length);
+    els.hands.className = hands.length ? 'ok' : 'warn';
+    els.landmarks.textContent = hands.length ? `${hands[0].length} titik` : '-';
+    draw(hands);
+    els.error.style.display = 'none';
+  } catch (error) {
+    setError(`detectForVideo gagal: ${error?.message || error}`);
+  }
+
+  if (now - lastLumaCheck >= 1000) {
+    lastLumaCheck = now;
+    try {
+      const luma = luminanceOf(video, video.videoWidth, video.videoHeight);
+      els.luma.textContent = `${luma.toFixed(1)} / 255${luma < 5 ? ' — FRAME HITAM' : ''}`;
+      els.luma.className = luma < 5 ? 'bad' : luma < 25 ? 'warn' : 'ok';
+    } catch (error) {
+      els.luma.textContent = `gagal membaca frame: ${error?.message || error}`;
+      els.luma.className = 'bad';
+    }
+  }
+
+  frameCount++;
+  const elapsed = now - fpsWindowStart;
+  if (elapsed >= 1000) {
+    els.fps.textContent = (frameCount * 1000 / elapsed).toFixed(1);
+    frameCount = 0;
+    fpsWindowStart = now;
+  }
+}
+
+function stop() {
+  running = false;
+  cancelAnimationFrame(rafId);
+  workingDelegate = null;
+  if (landmarker) { try { landmarker.close(); } catch {} landmarker = null; }
+  if (imageLandmarker) { try { imageLandmarker.close(); } catch {} imageLandmarker = null; }
+  if (stream) { for (const track of stream.getTracks()) track.stop(); stream = null; }
+  video.srcObject = null;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  els.camStatus.textContent = 'dihentikan';
+  els.camStatus.className = '';
+  els.hands.textContent = '-';
+  els.delegate.textContent = '-';
+  els.clock.textContent = '-';
+  empty.style.display = 'block';
+  empty.textContent = 'Kamera dihentikan.';
+}
+
+startBtn.addEventListener('click', () => { if (!running) startCamera(); });
+stopBtn.addEventListener('click', stop);
+window.addEventListener('beforeunload', stop);
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+[
+ {"id":"halo","teks_tampil":"Halo","audio_file":null,"catatan_isyarat":"CONTOH antarmuka; bentuk isyarat belum diverifikasi C."},
+ {"id":"tolong","teks_tampil":"Tolong","audio_file":null,"catatan_isyarat":"CONTOH antarmuka; bentuk isyarat belum diverifikasi C."},
+ {"id":"terima_kasih","teks_tampil":"Terima kasih","audio_file":null,"catatan_isyarat":"CONTOH antarmuka; bentuk isyarat belum diverifikasi C."},
+ {"id":"maaf","teks_tampil":"Maaf","audio_file":null,"catatan_isyarat":"CONTOH antarmuka; bentuk isyarat belum diverifikasi C."}
+]
