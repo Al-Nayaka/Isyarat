@@ -1,0 +1,36 @@
+{
+  "name": "Isyarat — Pengenal Bahasa Isyarat",
+  "short_name": "Isyarat",
+  "description": "Mengubah kosakata isyarat tangan menjadi teks dan suara, diproses di perangkat.",
+  "lang": "id",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "id": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#08272B",
+  "theme_color": "#08272B",
+  "categories": ["education", "utilities", "accessibility"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
