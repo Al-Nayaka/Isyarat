@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 640 480" width="640" height="480" role="img" aria-labelledby="title description">
+<title id="title">Panduan posisi kedua tangan di depan kamera</title>
+<desc id="description">Siluet manusia tanpa ciri gender dan tanpa wajah dengan kedua tangan terangkat alami di kanan dan kiri wajah. Ilustrasi statis, bukan video langsung dan bukan contoh isyarat tertentu.</desc>
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#17484b"/><stop offset=".55" stop-color="#0b3439"/><stop offset="1" stop-color="#08282d"/></linearGradient>
+ <radialGradient id="aura"><stop stop-color="#3a7777" stop-opacity=".50"/><stop offset="1" stop-color="#226268" stop-opacity="0"/></radialGradient>
+ <linearGradient id="skin" x1="0" y1="0" x2=".3" y2="1"><stop stop-color="#b6d3d3"/><stop offset=".6" stop-color="#91b1b4"/><stop offset="1" stop-color="#688c91"/></linearGradient>
+ <linearGradient id="body" x1="0" y1="0" x2=".1" y2="1"><stop stop-color="#9cb9ba"/><stop offset=".65" stop-color="#65888c"/><stop offset="1" stop-color="#375d64"/></linearGradient>
+ <linearGradient id="arm" x1="0" y1="0" x2=".2" y2="1"><stop stop-color="#a1c0c1"/><stop offset="1" stop-color="#658b90"/></linearGradient>
+ <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#051f23" stop-opacity="0"/><stop offset="1" stop-color="#051f23" stop-opacity=".22"/></linearGradient>
+ <g id="open-hand">
+  <!-- Four relaxed, proportionate fingers plus an inward-facing thumb. -->
+  <rect x="24" y="42" width="13.5" height="79" rx="6.75" transform="rotate(-12 31 105)"/>
+  <rect x="39" y="19" width="13.5" height="101" rx="6.75" transform="rotate(-4 45 105)"/>
+  <rect x="54" y="13" width="14" height="108" rx="7" transform="rotate(2 61 105)"/>
+  <rect x="69" y="30" width="13.5" height="87" rx="6.75" transform="rotate(11 76 102)"/>
+  <path d="M26 83 C33 79 74 78 81 87 C85 92 82 101 80 108 L98 83 C103 76 111 77 114 83 C117 89 113 95 107 103 L84 139 C80 151 69 156 54 154 C40 152 32 142 29 127 L22 99 C21 92 21 87 26 83Z"/>
+
+ </g>
+</defs>
+<!-- Only the silhouette is in this image; frame corners and status remain real UI elements. -->
+<rect width="640" height="480" fill="url(#bg)"/>
+<ellipse cx="320" cy="234" rx="272" ry="240" fill="url(#aura)"/>
+<!-- Subtle backdrop, no artificial face, portrait or moving parts. -->
+<path d="M138 480 C160 421 182 401 221 352 C240 331 257 311 280 305 L360 305 C383 311 402 333 423 354 C459 402 482 427 504 480Z" fill="#081f23" opacity=".15"/>
+<!-- Arms: bent naturally from shoulders toward wrists, one continuous silhouette. -->
+<path d="M262 310 C239 306 221 316 206 338 L177 389 C166 411 146 399 146 380 L157 296 C158 284 151 275 140 274 C129 273 122 282 120 294 L113 375 C106 412 124 442 152 452 C181 461 204 446 220 426 L281 350Z" fill="url(#arm)"/>
+<path d="M378 310 C402 307 419 316 435 338 L464 390 C475 410 493 400 494 381 L483 297 C481 284 488 275 500 274 C511 273 518 283 520 296 L527 374 C534 411 517 442 488 452 C459 461 434 446 420 426 L359 350Z" fill="url(#arm)"/>
+<!-- Torso and shoulders, no clothing, gender markers or facial features. -->
+<path d="M291 266 C290 293 282 299 264 304 L243 309 C207 319 185 355 178 480 H462 C456 355 430 319 398 309 L376 304 C357 298 350 290 349 266Z" fill="url(#body)"/>
+<!-- Neck joins naturally to the torso. -->
+<path d="M294 228 L292 270 C293 284 303 296 320 296 C337 296 347 284 348 270 L346 229Z" fill="url(#skin)"/>
+<!-- Neutral head shape with slight natural irregularity, no mouth, eyes, hair styling. -->
+<path d="M269 127 C264 102 270 83 286 72 C292 61 305 59 314 62 C323 56 338 59 346 65 C359 64 370 75 372 87 C387 94 392 111 385 130 L381 175 C379 207 356 241 324 247 C294 246 272 215 266 179Z" fill="url(#skin)"/>
+<path d="M269 139 C256 133 252 149 257 165 C259 172 266 176 273 171 M383 139 C395 133 398 150 392 165 C390 173 383 176 378 171" fill="url(#skin)"/>
+<!-- Smaller, correctly placed hands. Four fingers + thumb each. -->
+<g fill="url(#skin)" stroke="none" stroke-linejoin="round">
+ <g transform="translate(104 157) rotate(-7 63 116)"><use xlink:href="#open-hand"/></g>
+ <g transform="translate(536 157) scale(-1 1) rotate(-4 63 116)"><use xlink:href="#open-hand"/></g>
+</g>
+<!-- A gentle bottom fade echoes the approved visual; the status badge is HTML. -->
+<rect y="380" width="640" height="100" fill="url(#fade)"/>
+</svg>
